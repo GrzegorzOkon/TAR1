@@ -6,10 +6,10 @@ import org.apache.poi.ss.usermodel.*;
 import java.io.*;
 import java.sql.Connection;
 import java.text.*;
-import java.security.*;
 import java.util.TreeMap;
 
 public class TaryfaMain {
+
     public static void main(String[] args) {
         HSSFWorkbook workbook = new HSSFWorkbook(); //utworzenie czystego skoroszytu
         HSSFSheet sheet = workbook.createSheet("TT_centr"); //utworzenie nowego arkusza
@@ -51,8 +51,7 @@ public class TaryfaMain {
             workbook.write(out);
             out.close();
 
-            // Stworzenie hasha dla pliku.
-            part3 = "_" + hashFile(part1 + part2 + part4);
+            part3 = "_" + SHA1.createHash(part1 + part2 + part4);
 
             // Ponowne utworzenie kolejnego pliku z hashem.
             out = new FileOutputStream(new File(part1 + part2 + part3 + part4));
@@ -71,31 +70,5 @@ public class TaryfaMain {
         SimpleDateFormat CustomizedDateFormat = new SimpleDateFormat("yyyyMMdd");
         String CustomizedDate = CustomizedDateFormat.format(CurrentTime);
         return CustomizedDate;
-    }
-
-    // Metoda hashuje plik dyskowy, któego nazwa przesłąna jest parametrem
-    private static String hashFile(String file) {
-        String datafile = file;
-        StringBuffer sb = new StringBuffer("");
-
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA1");
-            FileInputStream fis = new FileInputStream(datafile);
-            byte[] dataBytes = new byte[1024];
-
-            int nread = 0;
-
-            while ((nread = fis.read(dataBytes)) != -1) {
-                md.update(dataBytes, 0, nread);
-            }
-
-            byte[] mdbytes = md.digest();
-
-            for (int i = 0; i < mdbytes.length; i++) {
-                sb.append(Integer.toString((mdbytes[i] & 0xff) + 0x100, 16).substring(1));
-            }
-        } catch (Exception e) {}
-
-        return sb.toString();
     }
 }
