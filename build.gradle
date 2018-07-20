@@ -11,14 +11,13 @@ sourceCompatibility = 1.8
 
 sourceSets {
     main {
-        java.srcDirs = ['src']
+        java.srcDirs = ['src\\main']
     }
 }
 
 dependencies {
     compile 'org.apache.poi:poi:3.9'
-
-    compile files('C:\\Users\\Grzesiek\\IdeaProjects\\TAR1\\libs\\jconn4.jar')
+    compile project(':sybase-connect')
 }
 
 repositories {

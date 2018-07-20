@@ -1,5 +1,7 @@
 package taryfa;
 
+import connection.ReadingResult;
+import connection.SybaseConnection;
 import org.apache.poi.hssf.usermodel.*;
 import java.util.*;
 import org.apache.poi.ss.usermodel.*;
@@ -15,12 +17,12 @@ public class TaryfaMain {
         HSSFSheet sheet = workbook.createSheet("TT_centr"); //utworzenie nowego arkusza
         Map<String, Object[]> data = new TreeMap<String, Object[]>(); //te dane potrzebują być zapisane w Object[]
 
-        ConnectionToDatabase ConnectionToCelina = new ConnectionToDatabase();
-        Connection ActiveConnection = ConnectionToCelina.connectToDatabase();
+        SybaseConnection connectionToCelina = new SybaseConnection();
+        Connection activeConnection = connectionToCelina.connectToDatabase();
 
         // Wykonanie zapytania.
         ReadingResult ReadingTTCentr = new ReadingResult();
-        data = ReadingTTCentr.executeQuery(ActiveConnection);
+        data = ReadingTTCentr.executeQuery(activeConnection);
 
         // Iterowanie pobranych danych i zapisanie do arkusza.
         Set<String> keyset = data.keySet();

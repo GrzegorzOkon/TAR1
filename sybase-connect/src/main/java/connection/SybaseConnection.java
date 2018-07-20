@@ -1,11 +1,11 @@
-package taryfa;
+package connection;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.*;
 
-public class ConnectionToDatabase {
+public class SybaseConnection {
     private String db_ip;
     private String db_port;
     private String db_user;
@@ -14,9 +14,9 @@ public class ConnectionToDatabase {
     private Properties LoginInformation;
     private Connection ActiveConnection;
 
-    Connection connectToDatabase() {
+    public Connection connectToDatabase() {
         db_ip = "xx.xx.xx.xx";
-        db_port = "yyyy";
+        db_port = "yy";
         db_user = "aa";
         db_pswd = "bb";
         URL = "jdbc:sybase:Tds:" + db_ip + ":" + db_port + "/TT_Centr";
