@@ -27,6 +27,7 @@ public class Excel {
 
     public static void main(String[] args) {
         Excel excel = new Excel();
+        File file = new File();
         Map<String, Object[]> data = new TreeMap<String, Object[]>();
 
         SybaseConnection connectionToCelina = new SybaseConnection();
@@ -37,7 +38,8 @@ public class Excel {
         data = ReadingTTCentr.executeQuery(activeConnection);
 
         excel.saveAsExcel(data);
-        File.createFile(excel);
+        file.saveFile(excel);
+        file.saveFile(excel, Hash.createSHA1(file.getFileName()));
     }
 
     public void saveAsExcel(Map<String, Object[]> data) {

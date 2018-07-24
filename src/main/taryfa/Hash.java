@@ -4,6 +4,8 @@ import java.io.FileInputStream;
 import java.security.MessageDigest;
 
 public class Hash {
+    private String SHA1;
+
     public static String createSHA1(String fileName) {
         StringBuilder hash = new StringBuilder("");
 
