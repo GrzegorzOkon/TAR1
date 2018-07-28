@@ -1,16 +1,23 @@
 package taryfa;
 
+import connection.ReadingResult;
+import connection.SybaseConnection;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+
 import java.io.FileOutputStream;
+import java.sql.Connection;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
+import java.util.TreeMap;
 
-public class File {
+public class TAR1 {
     private String fileNamePrefix;
     private String fileNameTimeStamp;
     private String fileNameHash;
     private String fileNameExtension;
 
-    public File() {
+    public TAR1() {
         fileNamePrefix = "taryfa";
         fileNameTimeStamp = "_" + getCurrentTimeStamp() + "_";
         fileNameExtension = ".xls";
@@ -54,6 +61,36 @@ public class File {
 
     public String getFileNameWithHash() {
         return "" + getFileNamePrefix() + getFileNameTimeStamp() + getFileNameHash() + getFileNameExtension();
+    }
+
+    public static void main(String[] args) {
+        Map<String, Object[]> data = new TreeMap<String, Object[]>();
+
+        SybaseConnection connectionToCelina = new SybaseConnection();
+        Connection activeConnection = connectionToCelina.connectToDatabase();
+
+        // Wykonanie zapytania.
+        ReadingResult ReadingTTCentr = new ReadingResult();
+        data = ReadingTTCentr.executeQuery(activeConnection);
+
+        HSSFWorkbook file;
+        TAR1 tar1 = new TAR1();
+        ExcelFileBuilder builder = new ExcelFileBuilder();
+
+        tar1.createTaricFile(builder);
+
+
+
+        excel.saveAsExcel(data);
+        file.saveFile(excel);
+        file.saveFile(excel, Hash.createSHA1(file.getFileName()));
+    }
+
+    public void createTaricFile(FileBuilder builder) {
+        builder.buildFile();
+        builder.buildSheet("TT_centr");
+
+
     }
 
     public void saveFile(Excel excel) {

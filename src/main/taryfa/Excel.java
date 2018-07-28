@@ -25,23 +25,6 @@ public class Excel {
         return sheet;
     }
 
-    public static void main(String[] args) {
-        Excel excel = new Excel();
-        File file = new File();
-        Map<String, Object[]> data = new TreeMap<String, Object[]>();
-
-        SybaseConnection connectionToCelina = new SybaseConnection();
-        Connection activeConnection = connectionToCelina.connectToDatabase();
-
-        // Wykonanie zapytania.
-        ReadingResult ReadingTTCentr = new ReadingResult();
-        data = ReadingTTCentr.executeQuery(activeConnection);
-
-        excel.saveAsExcel(data);
-        file.saveFile(excel);
-        file.saveFile(excel, Hash.createSHA1(file.getFileName()));
-    }
-
     public void saveAsExcel(Map<String, Object[]> data) {
         // Iterowanie pobranych danych i zapisanie do arkusza.
         Set<String> keyset = data.keySet();
