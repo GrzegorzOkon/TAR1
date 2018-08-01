@@ -12,12 +12,15 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class TAR1 {
+    Map<String, Object[]> data;
+
     private String fileNamePrefix;
     private String fileNameTimeStamp;
     private String fileNameHash;
     private String fileNameExtension;
 
     public TAR1() {
+        data = new TreeMap<String, Object[]>();
         fileNamePrefix = "taryfa";
         fileNameTimeStamp = "_" + getCurrentTimeStamp() + "_";
         fileNameExtension = ".xls";
@@ -64,48 +67,46 @@ public class TAR1 {
     }
 
     public static void main(String[] args) {
-        Map<String, Object[]> data = new TreeMap<String, Object[]>();
+        HSSFWorkbook file;
+        TAR1 tar1 = new TAR1();
+        ExcelFileBuilder builder = new ExcelFileBuilder();
 
         SybaseConnection connectionToCelina = new SybaseConnection();
         Connection activeConnection = connectionToCelina.connectToDatabase();
 
         // Wykonanie zapytania.
         ReadingResult ReadingTTCentr = new ReadingResult();
-        data = ReadingTTCentr.executeQuery(activeConnection);
-
-        HSSFWorkbook file;
-        TAR1 tar1 = new TAR1();
-        ExcelFileBuilder builder = new ExcelFileBuilder();
+        tar1.data = ReadingTTCentr.executeQuery(activeConnection);
 
         tar1.createTaricFile(builder);
+        file = builder.getFile();
 
-
-
-        excel.saveAsExcel(data);
-        file.saveFile(excel);
-        file.saveFile(excel, Hash.createSHA1(file.getFileName()));
+        tar1.saveFile(file);
+        tar1.saveFile(file, Hash.createSHA1(tar1.getFileName()));
     }
 
     public void createTaricFile(FileBuilder builder) {
         builder.buildFile();
         builder.buildSheet("TT_centr");
 
-
+        for(Object[] row : data.values()) {
+            builder.buildRow(row);
+        }
     }
 
-    public void saveFile(Excel excel) {
+    public void saveFile(HSSFWorkbook file) {
         try (FileOutputStream out = new FileOutputStream(new java.io.File(getFileName()))) {
-            excel.getWorkbook().write(out);
+            file.write(out);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
-    public void saveFile(Excel excel, String hash) {
+    public void saveFile(HSSFWorkbook file, String hash) {
         setFileNameHash(hash);
 
         try (FileOutputStream out = new FileOutputStream(new java.io.File(getFileNameWithHash()))) {
-            excel.getWorkbook().write(out);
+            file.write(out);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

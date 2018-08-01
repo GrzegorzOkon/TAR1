@@ -20,7 +20,7 @@ public class ExcelFileBuilder implements FileBuilder {
 
     @Override
     public void buildRow(Object[] data) {
-        Row row = findActiveSheet().createRow(currentFile.getSheetAt(0).getLastRowNum()+1);
+        Row row = getFirstSheet().createRow(getRowCount());
         int cellNum = 0;
 
         for(Object obj : data) {
@@ -34,11 +34,9 @@ public class ExcelFileBuilder implements FileBuilder {
     }
 
     @Override
-    public TAR1 getFile() {
-        return null;
-    }
+    public HSSFWorkbook getFile() { return currentFile; }
 
-    private HSSFSheet findActiveSheet() {
-        return currentFile.getSheetAt(0);
-    }
+    private HSSFSheet getFirstSheet() { return currentFile.getSheetAt(0); }
+
+    private int getRowCount() { return getFirstSheet().getPhysicalNumberOfRows(); }
 }
