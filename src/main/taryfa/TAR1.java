@@ -2,74 +2,25 @@ package taryfa;
 
 import connection.ReadingResult;
 import connection.SybaseConnection;
+import org.apache.poi.POIDocument;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 import java.io.FileOutputStream;
 import java.sql.Connection;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
 
 public class TAR1 {
     Map<String, Object[]> data;
 
-    private String fileNamePrefix;
-    private String fileNameTimeStamp;
-    private String fileNameHash;
-    private String fileNameExtension;
-
     public TAR1() {
         data = new TreeMap<String, Object[]>();
-        fileNamePrefix = "taryfa";
-        fileNameTimeStamp = "_" + getCurrentTimeStamp() + "_";
-        fileNameExtension = ".xls";
-    }
-
-    public String getFileNamePrefix() {
-        return fileNamePrefix;
-    }
-
-    public void setFileNamePrefix(String fileNamePrefix) {
-        this.fileNamePrefix = fileNamePrefix;
-    }
-
-    public String getFileNameTimeStamp() {
-        return fileNameTimeStamp;
-    }
-
-    public void setFileNameTimeStamp(String fileNameTimeStamp) {
-        this.fileNameTimeStamp = fileNameTimeStamp;
-    }
-
-    public String getFileNameHash() {
-        return fileNameHash;
-    }
-
-    public void setFileNameHash(String fileNameHash) {
-        this.fileNameHash = fileNameHash;
-    }
-
-    public String getFileNameExtension() {
-        return fileNameExtension;
-    }
-
-    public void setFileNameExtension(String fileNameExtension) {
-        this.fileNameExtension = fileNameExtension;
-    }
-
-    public String getFileName() {
-        return "" + getFileNamePrefix() + getFileNameTimeStamp() + getFileNameExtension();
-    }
-
-    public String getFileNameWithHash() {
-        return "" + getFileNamePrefix() + getFileNameTimeStamp() + getFileNameHash() + getFileNameExtension();
     }
 
     public static void main(String[] args) {
-        HSSFWorkbook file;
         TAR1 tar1 = new TAR1();
-        ExcelFileBuilder builder = new ExcelFileBuilder();
+        ExcelFileBuilder fileBuilder = new ExcelFileBuilder();
+        TAR1NameBuilder nameBuilder = new TAR1NameBuilder();
 
         SybaseConnection connectionToCelina = new SybaseConnection();
         Connection activeConnection = connectionToCelina.connectToDatabase();
@@ -78,11 +29,13 @@ public class TAR1 {
         ReadingResult ReadingTTCentr = new ReadingResult();
         tar1.data = ReadingTTCentr.executeQuery(activeConnection);
 
-        tar1.createTaricFile(builder);
-        file = builder.getFile();
+        tar1.createTaricFile(fileBuilder);
+        HSSFWorkbook file = fileBuilder.getFile();
 
-        tar1.saveFile(file);
-        tar1.saveFile(file, Hash.createSHA1(tar1.getFileName()));
+        tar1.createTaricFileName(nameBuilder, file);
+        String name = nameBuilder.getName();
+
+        tar1.saveFile(file, name);
     }
 
     public void createTaricFile(FileBuilder builder) {
@@ -94,28 +47,20 @@ public class TAR1 {
         }
     }
 
-    public void saveFile(HSSFWorkbook file) {
-        try (FileOutputStream out = new FileOutputStream(new java.io.File(getFileName()))) {
+    public void createTaricFileName(NameBuilder builder, POIDocument document) {
+        builder.buildFirstPartName();
+        builder.buildSplitPartName();
+        builder.buildSecondPartName();
+        builder.buildSplitPartName();
+        builder.buildThirdPartName(document);
+        builder.buildExtensionPartName();
+    }
+
+    public void saveFile(HSSFWorkbook file, String fileName) {
+        try (FileOutputStream out = new FileOutputStream(new java.io.File(fileName))) {
             file.write(out);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-    }
-
-    public void saveFile(HSSFWorkbook file, String hash) {
-        setFileNameHash(hash);
-
-        try (FileOutputStream out = new FileOutputStream(new java.io.File(getFileNameWithHash()))) {
-            file.write(out);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    private String getCurrentTimeStamp() {
-        Date CurrentTime = new Date();
-        SimpleDateFormat CustomizedDateFormat = new SimpleDateFormat("yyyyMMdd");
-        String CustomizedDate = CustomizedDateFormat.format(CurrentTime);
-        return CustomizedDate;
     }
 }

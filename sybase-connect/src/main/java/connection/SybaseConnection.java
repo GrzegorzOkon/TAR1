@@ -16,7 +16,7 @@ public class SybaseConnection {
 
     public Connection connectToDatabase() {
         db_ip = "xx.xx.xx.xx";
-        db_port = "yy";
+        db_port = "yyyy";
         db_user = "aa";
         db_pswd = "bb";
         URL = "jdbc:sybase:Tds:" + db_ip + ":" + db_port + "/TT_Centr";
