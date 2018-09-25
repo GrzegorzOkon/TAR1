@@ -45,8 +45,8 @@ public class TAR1NameBuilder implements NameBuilder {
             for (int i = 0; i < mdbytes.length; i++) {
                 hash.append(Integer.toString((mdbytes[i] & 0xff) + 0x100, 16).substring(1));
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (Exception e) {
+            throw new ApiException(e);
         }
 
         currentName.append(hash);
