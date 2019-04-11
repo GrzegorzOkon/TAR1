@@ -1,4 +1,4 @@
-package taryfa;
+package tariff;
 
 import java.io.FileOutputStream;
 import java.util.Map;
@@ -27,7 +27,7 @@ public class TAR1App {
     public static void main(String[] args) {
         TAR1App tar1 = new TAR1App();
 
-        Map<String, Object[]> data = tar1.getTaricData("xx.xx.xx.xx", "xxxx", "xxxxx", "xxxxx");
+        Map<String, Object[]> data = tar1.getTaricData("xx.xx.xx.xx", "xxxx", "xxxxxx", "xxxxxxx");
 
         tar1.createTaricFile(tar1.fileBuilder, data);
         POIDocument file = tar1.fileBuilder.getFile();

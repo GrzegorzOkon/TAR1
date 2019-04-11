@@ -1,4 +1,4 @@
-package taryfa;
+package tariff;
 
 import java.util.Properties;
 

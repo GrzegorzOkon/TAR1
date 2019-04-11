@@ -1,9 +1,9 @@
-package taryfa;
+package tariff;
 
 import org.apache.poi.POIDocument;
+import utils.Sha1Util;
 
 import java.io.ByteArrayOutputStream;
-import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -35,16 +35,9 @@ public class TAR1NameBuilder implements NameBuilder {
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             document.write(bos);
-            byte[] bytes = bos.toByteArray();
+            byte[] data = bos.toByteArray();
 
-            MessageDigest md = MessageDigest.getInstance("SHA1");
-            md.update(bytes);
-
-            byte[] mdbytes = md.digest();
-
-            for (int i = 0; i < mdbytes.length; i++) {
-                hash.append(Integer.toString((mdbytes[i] & 0xff) + 0x100, 16).substring(1));
-            }
+            hash.append(Sha1Util.sha1Hex(data));
         } catch (Exception e) {
             throw new ApiException(e);
         }

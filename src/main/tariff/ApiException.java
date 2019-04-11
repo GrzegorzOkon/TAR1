@@ -1,4 +1,4 @@
-package taryfa;
+package tariff;
 
 public class ApiException extends RuntimeException {
     public ApiException(Throwable cause) {

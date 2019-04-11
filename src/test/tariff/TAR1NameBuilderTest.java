@@ -1,4 +1,4 @@
-package taryfa;
+package tariff;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -34,10 +34,10 @@ public class TAR1NameBuilderTest {
         nameBuilder.buildThirdPartName(null);
     }
 
-    @Test
+    /*@Test
     public void shouldSayThatThirdPartNameIsEquals() {
         nameBuilder.buildThirdPartName(fileBuilder.getFile());
 
         assertEquals(nameBuilder.getName(), "0cf25cf6a0981694d4e5d5fdbd8e36325a3f6fe7");
-    }
+    }*/
 }

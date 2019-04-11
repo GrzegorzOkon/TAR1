@@ -1,4 +1,4 @@
-package taryfa;
+package tariff;
 
 import org.apache.poi.POIDocument;
 
